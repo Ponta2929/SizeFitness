@@ -134,6 +134,7 @@ namespace SizeFitness
                 Label_Width.Text = "Width : ";
                 Label_Height.Text = "Height : ";
                 Label_Maximize.Text = $"IsMaximize : ";
+
             }
             else
             {
@@ -159,12 +160,14 @@ namespace SizeFitness
                         NumericUpDown_Left.Value = info.Left;
                         NumericUpDown_Height.Value = info.Height;
                         NumericUpDown_Width.Value = info.Width;
+                        Button_Add.Enabled = true;
                     }
                 }
                 catch
                 {
                     UpdateInfomation(process, true);
                     Label_Path.Text = "SizeFitnessを管理者権限で起動してください。";
+                    Button_Add.Enabled = false;
                 }
             }
         }

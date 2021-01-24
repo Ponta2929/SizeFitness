@@ -10,9 +10,11 @@ namespace SizeFitness
     [Serializable]
     public class Setting
     {
+
         private static Setting instance;
-        public static Setting GetInstance() => instance ?? (instance = new());
-        public static Setting SetInstance(Setting setting) => instance = setting;
+        public static Setting GetInstance() => instance ?? (instance = new Setting());
+        public static void SetInstance(Setting inst) => instance = inst;
+
 
         public BindingList<ProfileInfo> Profiles { get; set; } = new();
     }

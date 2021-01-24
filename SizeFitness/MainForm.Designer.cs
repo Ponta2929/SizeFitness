@@ -281,6 +281,7 @@ namespace SizeFitness
             // 
             // Button_Add
             // 
+            this.Button_Add.Enabled = false;
             this.Button_Add.Location = new System.Drawing.Point(262, 241);
             this.Button_Add.Name = "Button_Add";
             this.Button_Add.Size = new System.Drawing.Size(75, 23);

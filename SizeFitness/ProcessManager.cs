@@ -73,6 +73,10 @@ namespace SizeFitness
 
         #endregion
 
+        /// <summary>
+        /// ウィンドウリストをウィンドウオーダー順に沿って更新します。
+        /// 
+        /// </summary>
         public void UpdateWindowList()
         {
             List<Process> process = new();
@@ -89,6 +93,11 @@ namespace SizeFitness
             ProcessList = process.ToArray();
         }
 
+        /// <summary>
+        /// ウィンドウ情報を取得します。
+        /// </summary>
+        /// <param name="process">取得するプロセス</param>
+        /// <returns></returns>
         public WindowInfo GetWindowInfo(Process process)
         {
             Win32API.GetWindowInfo(process.MainWindowHandle, out var info);
@@ -104,6 +113,12 @@ namespace SizeFitness
             };
         }
 
+        /// <summary>
+        /// ウィンドウ情報を設定します。
+        /// </summary>
+        /// <param name="process">設定するプロセス</param>
+        /// <param name="info">設定する内容</param>
+        /// <returns></returns>
         public bool SetWindowPos(Process process, ProfileInfo info)
         {
             if (info.Enable)

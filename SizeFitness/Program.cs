@@ -17,6 +17,8 @@ namespace SizeFitness
         static void Main()
         {
             var command = Environment.CommandLine.ToLower();
+
+            // コマンド分解
             var app = command.RegexString(@"/app:(?<value>\w+.exe)", "value");
             var height = command.RegexString(@"/height:(?<value>\d+)", "value");
             var width = command.RegexString(@"/width:(?<value>\d+)", "value");
@@ -25,23 +27,23 @@ namespace SizeFitness
             var create = command.Contains("/c");
             var window = command.Contains("/nowindow");
 
+            try
+            {
+                Setting.SetInstance(JsonSerializer.Deserialize<Setting>(File.ReadAllText($"{Application.StartupPath}\\setting.json")));
+            }
+            catch
+            {
+
+            }
+
             if (app is null)
             {
                 Console.WriteLine("プロセス名を指定してください。");
             }
             else
             {
-                var manager = ProcessManager.GetInstance();
                 var setting = Setting.GetInstance();
-
-                try
-                {
-                    Setting.SetInstance(JsonSerializer.Deserialize<Setting>(File.ReadAllText($"{Application.StartupPath}\\setting.json")));
-                }
-                catch
-                {
-
-                }
+                var manager = ProcessManager.GetInstance();
 
                 manager.UpdateWindowList();
 
@@ -61,7 +63,7 @@ namespace SizeFitness
                             Left = int.TryParse(left, out var l) ? l : info.Left,
                             Top = int.TryParse(top, out var t) ? t : info.Top,
                             Enable = true,
-                            Path = proc?.MainModule?.FileName
+                            Path = proc.MainModule?.FileName
                         };
 
                         if (create)

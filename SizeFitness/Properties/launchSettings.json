@@ -1,8 +1,7 @@
 {
   "profiles": {
     "SizeFitness": {
-      "commandName": "Project",
-      "commandLineArgs": "/app:devenv.exe /height:100"
+      "commandName": "Project"
     }
   }
 }
