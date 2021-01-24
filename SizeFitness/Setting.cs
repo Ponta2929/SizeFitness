@@ -12,6 +12,7 @@ namespace SizeFitness
     {
         private static Setting instance;
         public static Setting GetInstance() => instance ?? (instance = new());
+        public static Setting SetInstance(Setting setting) => instance = setting;
 
         public BindingList<ProfileInfo> Profiles { get; set; } = new();
     }

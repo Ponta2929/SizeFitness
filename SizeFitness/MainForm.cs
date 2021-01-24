@@ -1,14 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
-using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace SizeFitness
@@ -49,30 +43,22 @@ namespace SizeFitness
             targetWindow.MouseUp += TargetWindow_MouseUp;
             targetWindow.Show(this);
 
-
-            try
-            {
-                setting = JsonSerializer.Deserialize<Setting>(File.ReadAllText($"{Application.StartupPath}\\setting.json"));
-            }
-            catch
-            {
-
-            }
-
             ComboBox_Profile.DataSource = setting.Profiles;
             ComboBox_Profile.DisplayMember = "ProcessName";
+
+            // ウィンドウリスト更新
             manager.UpdateWindowList();
         }
 
         private void TargetWindow_MouseUp(object sender, MouseEventArgs e)
         {
             // ターゲットウィンドウをもとに戻す
-            targetWindow.Location = this.PointToScreen(panel1.Location);
+            targetWindow.Location = PointToScreen(panel1.Location);
             borderWindow.Visible = false;
             UpdateInfomation(activeProcess, false);
-            this.Activate();
+            Activate();
 
-
+            // プロファイルが存在する場合、アクティブにする
             var profile = setting.Profiles.FirstOrDefault(target => target.ProcessName.Equals($"{activeProcess.ProcessName}.exe"));
 
             if (profile is not null)
@@ -91,7 +77,7 @@ namespace SizeFitness
             // ウィンドウリストの更新
             manager.UpdateWindowList();
 
-            // 大麻停止
+            // タイマー停止
             Timer_Refresh.Stop();
         }
 
@@ -106,6 +92,9 @@ namespace SizeFitness
             }
         }
 
+        /// <summary>
+        /// ターゲットウィンドウ位置のプロセスをフォーカスする
+        /// </summary>
         private void HittingProcess()
         {
             if (manager.ProcessList != null)
@@ -126,6 +115,11 @@ namespace SizeFitness
             }
         }
 
+        /// <summary>
+        /// 情報を表示する
+        /// </summary>
+        /// <param name="process">表示する情報のプロセス</param>
+        /// <param name="isReset"></param>
         private void UpdateInfomation(Process process, bool isReset)
         {
             if (isReset)
@@ -176,10 +170,11 @@ namespace SizeFitness
         }
 
         private void MainForm_Move(object sender, EventArgs e) =>
-            targetWindow.Location = this.PointToScreen(panel1.Location);
+            targetWindow.Location = PointToScreen(panel1.Location);
 
         private void Button_Add_Click(object sender, EventArgs e)
         {
+            // アクティブプロセスが存在しない場合既存のプロファイルを選択
             if (activeProcess is null)
             {
                 if (ComboBox_Profile.SelectedItem is ProfileInfo info)
@@ -193,6 +188,7 @@ namespace SizeFitness
             }
             else
             {
+                // 存在する場合、新規プロファイル作成
                 var profile = new ProfileInfo()
                 {
                     ProcessName = $"{activeProcess.ProcessName}.exe",
@@ -242,6 +238,7 @@ namespace SizeFitness
 
         private void ComboBox_Profile_SelectedIndexChanged(object sender, EventArgs e)
         {
+            // プロファイル切り替え
             if (ComboBox_Profile.SelectedItem is ProfileInfo info)
             {
                 NumericUpDown_Top.Value = info.Top;
@@ -250,6 +247,7 @@ namespace SizeFitness
                 NumericUpDown_Width.Value = info.Width;
                 CheckBox_Enable.Checked = info.Enable;
 
+                // 対象のプロセスがプロファイルに存在する場合、情報を更新する
                 var process = manager.ProcessList?.FirstOrDefault(target => $"{target.ProcessName}.exe".Equals(info.ProcessName));
 
                 if (process is not null)
@@ -264,7 +262,6 @@ namespace SizeFitness
             manager.UpdateWindowList();
 
             // 変更チェック
-
             foreach (var proc in manager.ProcessList)
             {
                 var info = manager.GetWindowInfo(proc);
